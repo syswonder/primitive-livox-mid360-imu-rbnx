@@ -1,0 +1,42 @@
+# Livox MID-360 IMU primitive for Ranger Mini.
+#
+# The MID-360 ships an embedded 6-axis IMU which the upstream
+# `livox_ros_driver2` publishes on `/livox/imu` as a side-effect of
+# the lidar launch (see `mid360_lidar_rbnx`). This package owns the
+# `primitive/imu/*` atlas surface and ONLY that — robonix's invariant
+# is "one primitive namespace = one package".
+#
+# Scope: this package does NOT spawn any ROS process. It assumes
+# `mid360_lidar_rbnx` has already been initialized (which is what
+# makes `/livox/imu` live on the host bus). Boot order in the deploy
+# manifest must put mid360_lidar_rbnx before mid360_imu_rbnx.
+#
+# Lifecycle: start.sh launches the atlas bridge; main() registers the
+# capability + declares ONLY `primitive/imu/driver` on atlas, then
+# blocks. `rbnx boot` calls `Driver(CMD_INIT, config_json)` — that
+# handler subscribes to the configured IMU topic, waits for the first
+# sensor_msgs/Imu message (sentinel that the upstream driver is alive),
+# and only then declares `primitive/imu/imu` on atlas.
+#
+# Capability surface (mode = abstract pattern, transport = wire):
+#   primitive/imu/driver         mode=rpc        transport=gRPC
+#   primitive/imu/imu            mode=topic_out  transport=ROS2  sensor_msgs/Imu
+#
+# Config (passed via `Driver(CMD_INIT, config_json)`):
+#   imu_topic          default "/livox/imu"
+#   sentinel_timeout_s default 30.0
+manifestVersion: 1
+
+package:
+  name: com.robonix.ranger.mid360_imu
+  version: 0.1.0
+  vendor: robonix
+  description: Livox MID-360 IMU atlas wrapper — depends on mid360_lidar_rbnx.
+  license: MulanPSL-2.0
+
+build: bash scripts/build.sh
+start: bash scripts/start.sh
+
+capabilities:
+  - name: robonix/primitive/imu/driver
+  - name: robonix/primitive/imu/imu
