@@ -34,13 +34,20 @@ the sentinel proving the upstream livox driver is alive on this host's
 DDS bus. Once it arrives, we declare `primitive/imu/imu` on atlas and
 return ok.
 
-## Boot ordering
+## Boot ordering — defer, no dep graph
 
-`mid360_lidar_rbnx` MUST initialize first. Until its
-`Driver(CMD_INIT)` succeeds, the upstream livox launch isn't running
-and `/livox/imu` doesn't exist on the bus — our sentinel will time
-out. The deploy manifest should list mid360_lidar_rbnx ahead of
-mid360_imu_rbnx.
+Robonix doesn't track package startup dependencies. The deploy manifest
+is an unordered list. Instead, packages defer themselves at runtime:
+
+If `mid360_lidar_rbnx`'s Init hasn't completed yet, `/livox/imu` is
+silent. Our Init does a short probe (default 2 s) and returns
+`Driver_Response(ok=False, state="deferred")`. `rbnx boot` collects
+deferred drivers and retries them periodically until the system reaches
+steady state (all ready, or no progress in a round → reported as stuck).
+
+This is intentionally simpler than a topological dep graph: each
+package only declares what it needs at the moment its Init runs, so
+there's no manifest-drift problem when contracts change shape.
 
 ## Config (passed via `Driver(CMD_INIT, config_json)`)
 

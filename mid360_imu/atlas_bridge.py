@@ -138,13 +138,17 @@ class _ImuDriverServicer(contracts_grpc.PrimitiveImuDriverServicer):
                 return lifecycle_pb2.Driver_Response(ok=True, state="ready", error="")
 
         imu_topic = cfg.get("imu_topic", "/livox/imu")
-        sentinel_timeout = float(cfg.get("sentinel_timeout_s", 30.0))
+        # Short probe — we're a topic shim with NO underlying ROS process
+        # to spawn, so if the topic isn't there yet it's because our peer
+        # (mid360_lidar_rbnx) hasn't completed Init. Return `deferred`
+        # fast and let rbnx boot retry us once it has — far cheaper than
+        # holding the full sentinel_timeout for a known-async wait.
+        defer_probe = float(cfg.get("defer_probe_s", 2.0))
 
-        if not _wait_for_imu(imu_topic, sentinel_timeout):
+        if not _wait_for_imu(imu_topic, defer_probe):
             return lifecycle_pb2.Driver_Response(
-                ok=False, state="error",
-                error=f"no Imu on {imu_topic} within {sentinel_timeout:.1f}s "
-                      f"(is mid360_lidar_rbnx initialized?)",
+                ok=False, state="deferred",
+                error=f"waiting for {imu_topic} (mid360_lidar_rbnx not initialized yet?)",
             )
 
         try:
