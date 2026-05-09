@@ -34,6 +34,8 @@ package:
   description: Livox MID-360 IMU atlas wrapper — depends on mid360_lidar_rbnx.
   license: MulanPSL-2.0
 
+capability_id: mid360_imu
+
 build: bash scripts/build.sh
 start: bash scripts/start.sh
 
