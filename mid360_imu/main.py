@@ -80,7 +80,7 @@ def init(cfg: dict):
             "(mid360_lidar may not have finished init yet)"
         )
 
-    cap.declare_ros2(
+    cap.declare_ros2_topic(
         "robonix/primitive/imu/imu",
         topic=imu_topic,
         qos="best_effort",

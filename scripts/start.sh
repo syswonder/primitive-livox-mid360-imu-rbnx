@@ -3,6 +3,9 @@
 # Spawn the mid360_imu capability process. No ROS subprocess — the IMU
 # topic comes from mid360_lidar_rbnx's livox launch as a side-effect.
 set -euo pipefail
+: "${AMENT_TRACE_SETUP_FILES:=}"
+: "${COLCON_TRACE:=}"
+export AMENT_TRACE_SETUP_FILES COLCON_TRACE
 PKG="${RBNX_PACKAGE_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 cd "$PKG"
 
