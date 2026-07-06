@@ -1,6 +1,6 @@
 # mid360_imu_rbnx
 
-Robonix package owning the `primitive/imu/*` namespace for the Ranger Mini's MID-360 embedded IMU. The IMU stream itself is produced by the upstream `livox_ros_driver2` launch (spawned by [`mid360_lidar_rbnx`](https://github.com/enkerewpo/mid360_lidar_rbnx)) and published on `/livox/imu`. **This package does NOT spawn any ROS process** — it's a pure topic shim that atlas-registers the existing topic.
+Robonix package owning the `primitive/imu/*` namespace for the Ranger Mini's MID-360 embedded IMU. The IMU stream itself is produced by the upstream `livox_ros_driver2` launch (spawned by [`mid360_lidar_rbnx`](https://github.com/syswonder/primitive-livox-mid360-lidar-rbnx)) and published on `/livox/imu`. **This package does NOT spawn any ROS process** — it's a pure topic shim that atlas-registers the existing topic.
 
 The split exists because robonix's invariant is "one primitive namespace = one package". Mixing `primitive/lidar/*` and `primitive/imu/*` in the same package would let two namespaces share one capability_id, breaking that rule.
 
