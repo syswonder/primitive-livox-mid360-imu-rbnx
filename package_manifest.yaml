@@ -35,8 +35,6 @@ package:
   maintainers: [wheatfox <wheatfox17@icloud.com>]
   license: MulanPSL-2.0
 
-capability_id: mid360_imu
-
 build: bash scripts/build.sh
 start: bash scripts/start.sh
 
