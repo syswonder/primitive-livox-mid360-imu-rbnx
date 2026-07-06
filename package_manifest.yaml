@@ -30,7 +30,6 @@ manifestVersion: 1
 package:
   name: robonix.primitive.livox.mid360.imu
   version: 0.1.0
-  vendor: robonix
   description: Livox MID-360 IMU atlas wrapper — depends on mid360_lidar_rbnx.
   tags: [primitive, imu, livox, mid360]
   maintainers: [wheatfox <wheatfox17@icloud.com>]
