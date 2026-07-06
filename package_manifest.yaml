@@ -33,6 +33,7 @@ package:
   vendor: robonix
   description: Livox MID-360 IMU atlas wrapper — depends on mid360_lidar_rbnx.
   tags: [primitive, imu, livox, mid360]
+  maintainers: [syswonder]
   license: MulanPSL-2.0
 
 capability_id: mid360_imu
