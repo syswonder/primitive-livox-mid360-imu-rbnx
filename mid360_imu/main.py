@@ -22,7 +22,7 @@ import os
 import threading
 import time
 
-from robonix_api import Capability, Ok, Err, Deferred
+from robonix_api import Deferred, Err, Ok, Primitive
 
 logging.basicConfig(
     level=os.environ.get("MID360_IMU_LOG_LEVEL", "INFO"),
@@ -30,7 +30,7 @@ logging.basicConfig(
 )
 log = logging.getLogger("mid360_imu")
 
-cap = Capability(id="mid360_imu", namespace="robonix/primitive/imu")
+cap = Primitive(id="mid360_imu", namespace="robonix/primitive/imu")
 
 
 def _wait_for_imu(topic: str, timeout_s: float) -> bool:
