@@ -14,10 +14,16 @@ if [[ "$CLEAN" == "1" ]]; then
 fi
 mkdir -p rbnx-build/data
 
-FLAGS=(--out-dir "$PKG/rbnx-build/codegen")
+FLAGS=(--ros2 --out-dir "$PKG/rbnx-build/codegen")
 [[ "$CLEAN" == "1" ]] && FLAGS+=(--clean)
 echo "[mid360_imu/build] rbnx codegen ${FLAGS[*]}"
 rbnx codegen -p "$PKG" "${FLAGS[@]}"
+
+ROS_DISTRO="${ROS_DISTRO:-humble}"
+set +u; source "/opt/ros/${ROS_DISTRO}/setup.bash"; set -u
+ROS2_IDL="$PKG/rbnx-build/codegen/ros2_idl"
+echo "[mid360_imu/build] colcon build (Robonix ROS 2 interfaces)"
+(cd "$ROS2_IDL" && colcon build)
 
 touch "$PKG/rbnx-build/.rbnx-built"
 echo "[mid360_imu/build] done."
