@@ -40,4 +40,6 @@ start: bash scripts/start.sh
 
 capabilities:
   - name: robonix/primitive/imu/driver
+    transport: grpc
   - name: robonix/primitive/imu/imu
+    transport: ros2
